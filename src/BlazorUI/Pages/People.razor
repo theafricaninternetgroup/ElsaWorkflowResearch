@@ -1,0 +1,41 @@
+﻿@page "/people"
+@using Csla.Blazor
+@using Csla
+@using Elsa.RD.BusinessLibrary
+@inject ViewModel<PersonList> vm
+@inject IDataPortal<PersonList> portal
+
+@if (vm.Model == null)
+{
+    <p>Loading....</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+            </tr>
+           
+        </thead>
+        <tbody>
+            @foreach(var person in vm.Model)
+            {
+                <tr>
+                    <td>@person.Id</td>
+                    <td>@person.FirstName</td>
+                    <td>@person.LastName</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    protected override async Task OnParametersSetAsync()
+    {
+        await vm.RefreshAsync(() => portal.FetchAsync());
+    }
+}

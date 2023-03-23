@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  
+
+  
+  <ItemGroup>
+    <PackageReference Include="Elsa" Version="2.10.2.2" />
+    <PackageReference Include="Elsa.Activities.Conductor" Version="2.11.0" />
+    <PackageReference Include="Elsa.Designer.Components.Web" Version="2.10.2.2" />
+    <PackageReference Include="Elsa.Server.Api" Version="2.10.2.2" />
+    <PackageReference Include="Csla" Version="6.2.2" />
+  </ItemGroup>
+
+  
+  <ItemGroup>
+    <ProjectReference Include="..\ActivityLibrary\Elsa.RD.ActivityLibrary.csproj" />
+  </ItemGroup>
+
+  
+ 
+
+ 
+
+ 
+</Project>

@@ -1,0 +1,8 @@
+﻿<label class="@CSSClass">@Property.FriendlyName</label>
+
+@code {
+    [Parameter]
+    public Csla.Blazor.IPropertyInfo Property { get; set; } = default!;
+    [Parameter]
+    public string CSSClass { get; set; } = string.Empty;
+}

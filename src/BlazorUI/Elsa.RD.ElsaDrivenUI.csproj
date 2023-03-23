@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  
+
+ 
+  <ItemGroup>
+    <PackageReference Include="Csla" Version="6.2.2" />
+    <PackageReference Include="Csla.AspNetCore" Version="6.2.2" />
+    <PackageReference Include="Csla.Blazor" Version="6.2.2" />
+    <PackageReference Include="Elsa" Version="2.10.2.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BusinessLibrary\Elsa.RD.BusinessLibrary.csproj" />
+    <ProjectReference Include="..\DataAccessLayer\Elsa.RD.Dal.csproj" />
+  </ItemGroup>
+
+ 
+
+  
+
+</Project>

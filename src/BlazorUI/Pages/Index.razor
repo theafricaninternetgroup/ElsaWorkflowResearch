@@ -1,0 +1,125 @@
+﻿@page "/"
+@inject WizardViewModel<PayrollSetUpFactory> vm
+@inject IDataPortalFactory portal
+
+@if(vm.Model==null){
+    <p>Loading...</p>
+}
+else{
+    <div>
+        <div class="progress">
+            <div class="progress-bar progress-bar-striped" role="progressbar" style="width:@vm.Progress%" aria-valuenow="@vm.Progress" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+        <br />
+        <WizardInputCard WizardStep="1" CurrentStep="@vm.Step"
+                     CardHeader="Step 1 of 5" CardTitle="Add Company Details">
+            <div class="mb-3">
+                <LabelText CSSClass="form-label" Property="@(vm.GetPropertyInfo(()=>vm.Model.Company.Name))" />
+                <TextInput Property="@(vm.GetPropertyInfo(() => vm.Model.Company.Name))" CSSClass="form-control" />
+
+             </div>
+            <div class="mb-3">
+                <LabelText CSSClass="form-label" Property="@(vm.GetPropertyInfo(()=>vm.Model.Company.Address))" />
+                <TextInput Property="@(vm.GetPropertyInfo(() => vm.Model.Company.Address))" CSSClass="form-control" />
+
+            </div>
+
+        </WizardInputCard>
+        <WizardInputCard WizardStep="2" CurrentStep="@vm.Step"
+                     CardHeader="Step 2 of 5" CardTitle="Add Employee Personal Details">
+            <div class="mb-3">
+                <LabelText CSSClass="form-label" Property="@(vm.GetPropertyInfo(()=>vm.Model.Employee.FirstName))" />
+                <TextInput Property="@(vm.GetPropertyInfo(() => vm.Model.Employee.FirstName))" CSSClass="form-control" />
+
+            </div>
+            <div class="mb-3">
+                <LabelText CSSClass="form-label" Property="@(vm.GetPropertyInfo(()=>vm.Model.Employee.LastName))" />
+                <TextInput Property="@(vm.GetPropertyInfo(() => vm.Model.Employee.LastName))" CSSClass="form-control" />
+
+            </div>
+        </WizardInputCard>
+        <WizardInputCard WizardStep="3" CurrentStep="@vm.Step"
+                     CardHeader="Step 3 of 5" CardTitle=" Add Employee Contact Details">
+            <div class="mb-3">
+                <LabelText CSSClass="form-label" Property="@(vm.GetPropertyInfo(()=>vm.Model.Employee.AddressLine1))" />
+                <TextInput Property="@(vm.GetPropertyInfo(() => vm.Model.Employee.AddressLine1))" CSSClass="form-control" />
+
+            </div>
+            <div class="mb-3">
+                <LabelText CSSClass="form-label" Property="@(vm.GetPropertyInfo(()=>vm.Model.Employee.AddressLine2))" />
+                <TextInput Property="@(vm.GetPropertyInfo(() => vm.Model.Employee.AddressLine2))" CSSClass="form-control" />
+
+            </div>
+            <div class="mb-3">
+                <LabelText CSSClass="form-label" Property="@(vm.GetPropertyInfo(()=>vm.Model.Employee.MobilePhoneNo))" />
+                <TextInput Property="@(vm.GetPropertyInfo(() => vm.Model.Employee.MobilePhoneNo))" CSSClass="form-control" />
+
+            </div>
+            <div class="mb-3">
+                <LabelText CSSClass="form-label" Property="@(vm.GetPropertyInfo(()=>vm.Model.Employee.EmailAddress))" />
+                <TextInput Property="@(vm.GetPropertyInfo(() => vm.Model.Employee.EmailAddress))" CSSClass="form-control" />
+
+            </div>
+        </WizardInputCard>
+        <WizardInputCard WizardStep="4" CurrentStep="@vm.Step"
+         CardHeader="Step 4 of 5" CardTitle="Proceed to next step/Add another Employee">
+            <p>Congratulations,you have successfully added @employeeName</p>
+        </WizardInputCard>
+
+        <WizardInputCard WizardStep="5" CurrentStep="@vm.Step"
+                     CardHeader="Step 5 of 5" CardTitle="Finish Payroll Setup">
+            
+        </WizardInputCard>
+       
+        <div>
+            <button class="btn btn-primary btn-lg" disabled="@vm.PreviousButtonDisabled" @onclick=@(()=>vm.GoToPreviousStep())>@vm.PreviousButtonCaption</button>
+            <button class="btn btn-primary btn-lg" disabled="@vm.NextButtonDisabled" @onclick=@(()=>GoToNextStep(vm))>@vm.NextButtonCaption</button>
+        </div>
+    </div>
+}
+
+@code{
+    private int companyId;
+    private string employeeName = string.Empty;
+
+    private async void GoToNextStep(WizardViewModel<PayrollSetUpFactory> viewModel)
+    {
+        switch (viewModel.Step)
+        {
+            case 1:
+                var company = await viewModel.Model.Company.SaveAsync();
+                companyId = company.Id;
+                vm.Model = null;
+                await vm.RefreshAsync(() => portal.GetPortal<PayrollSetUpFactory>().FetchAsync(companyId));
+                viewModel.GoTo(2);
+                StateHasChanged();
+                break;
+            case 3:
+                var employee = await viewModel.Model.Employee.SaveAsync();
+                employeeName = $"{employee.FirstName} {employee.LastName}";
+                vm.Model = null;
+                await vm.RefreshAsync(() => portal.GetPortal<PayrollSetUpFactory>().FetchAsync(companyId));
+                viewModel.GoTo(4);
+                StateHasChanged();
+                break;
+            default:
+                viewModel.GoToNextStep();
+                StateHasChanged();
+                break;
+        }
+    }
+
+    protected override async Task OnParametersSetAsync(){
+        await vm.RefreshAsync(() => portal.GetPortal<PayrollSetUpFactory>().FetchAsync());
+        vm.SetNavButtons();
+    }
+
+    protected override void OnInitialized(){
+        vm.ModelPropertyChanged += async (s, e) => await InvokeAsync(() =>
+        {
+            StateHasChanged();
+            vm.SetNavButtons();
+        });
+    }
+
+}

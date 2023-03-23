@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BusinessLibrary\Elsa.RD.BusinessLibrary.csproj" />
+  </ItemGroup>
+	
+<ItemGroup>
+	<PackageReference Include="Elsa" Version="2.10.2.2" />
+    <PackageReference Include="Csla" Version="6.2.2" />
+</ItemGroup>
+
+</Project>
